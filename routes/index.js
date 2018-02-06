@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 
     res.render('login');
   } else {
-    res.render('products')
+    res.render('products', {user_id: req.session.user_id})
   }
   // else {
   //     res.render('products', {

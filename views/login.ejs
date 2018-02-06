@@ -14,8 +14,7 @@
     <!-- <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
     <!-- Custom styles for this template -->
-    <link href="/stylesheets/dashboard.css" rel="stylesheet">
-    <link href="/stylesheets/style.css" rel="stylesheet">
+    <link href="/stylesheets/signin.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -24,12 +23,29 @@
     <![endif]-->
   </head>
   <body>
-    <div id="div_login">
-      <h2>Login</h2>
-      <input id="account_id" placeholder="id"/>
-      <input id="account_pw" placeholder="pwd"/>
-      <button onClick={onClicked()}>Button</button>
-    </div>
+
+    <form class="form-signin">
+      <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input id="account_id" class="form-control" placeholder="ID" required="" autofocus="">
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="account_pw" class="form-control" placeholder="Password" required="">
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" onClick={onClicked()}>Sign in</button>
+      <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+    </form>
+
+    <!--<div id="div_login">-->
+      <!--<h2>Login</h2>-->
+      <!--<input id="account_id" placeholder="id"/>-->
+      <!--<input id="account_pw" placeholder="pwd"/>-->
+      <!--<button onClick={onClicked()}>Button</button>-->
+    <!--</div>-->
 
     <script src="/javascripts/login.js"></script>
     <!-- Bootstrap core JavaScript================================================== -->
