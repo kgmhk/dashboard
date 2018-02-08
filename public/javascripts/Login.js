@@ -14,11 +14,17 @@ function onClicked() {
 
 
     var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        console.log(xhr.response); //Outputs a DOMString by default
+
+      }
+    }
     xhr.open('GET', `/dbs/accounts?id=${id}&pw=${pw}`, true);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 
-  location.href="/products";
+
     // fetch(`/dbs/accounts?id=${id}&pw=${pw}`,{
     //     method: 'get',
     //     dataType: 'json',

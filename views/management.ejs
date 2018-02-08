@@ -46,8 +46,74 @@
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h2 class="sub-header">재고 관리</h2>
-            <div id="products" class="table-responsive">
+            <h2 class="sub-header">재고 관리 <small>직접 입력</small></h2>
+
+            <form class="form-signin">
+
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group-lg">
+                            <label for="product_code" class="sr-only">상품코드</label>
+                            <input type="text" class="form-control" placeholder="상품코드"
+                                   aria-describedby="sizing-addon1" id="product_code" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-group-lg">
+                            <input type="text" class="form-control" placeholder="상품색상"
+                                   aria-describedby="sizing-addon1" id="product_color" required>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group-lg">
+                            <input type="text" class="form-control" placeholder="입고가격"
+                                   aria-describedby="sizing-addon1" id="product_input_price" required>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="input-group-lg">
+                            <input type="text" class="form-control" placeholder="판매가격"
+                                   aria-describedby="sizing-addon1" id="product_output_price" required>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group-lg">
+                            <input type="text" class="form-control" placeholder="브랜드명"
+                                   aria-describedby="sizing-addon1" id="product_brand" required>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="input-group-lg">
+                            <input type="text" class="form-control" placeholder="사이즈"
+                                   aria-describedby="sizing-addon1" id="product_size" required>
+                        </div>
+                    </div>
+
+                </div>
+                <br/>
+                <div class="input-group-lg">
+                    <button type="button" class="btn btn-default btn-lg" onClick={directInputClicked()}>입력</button>
+                </div>
+
+            </form>
+            <!--<div id="products" class="table-responsive">-->
+            <h2 class="sub-header">재고 관리 <small>바코드 입력</small></h2>
+
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="바코드를 인식해주세요.">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">입력</button>
+              </span>
+            </div><!-- /input-group -->
             </div>
         </div>
     </div>

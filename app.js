@@ -14,7 +14,7 @@ import index from './routes/index';
 
 let dbconfig = require(__dirname+'/config/database.json');
 // 주석 ---
-// let connection = mysql.createConnection(dbconfig);
+let connection = mysql.createConnection(dbconfig);
 // ----
 // import favicon from 'serve-favicon';
 
@@ -115,65 +115,65 @@ app.get('/test', (req, res) => {
   console.log('aaa');
 
   // 주 석 ----
-  // connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
-  //   "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id", (err, rows) => {
-  //   if(err) {
-  //     console.log('err : ', err);
-  //     throw err;
-  //   }
-  //
-  //
-  //   // let args = _map(rows, row => row);
-  //
-  //   console.log('args : ', rows);
-  //   let products = rows;
-  //
-  //   console.log('products: ', products);
-  //   let sizeArray = [130,140,150,160,170,180,190,200,210,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
-  //
-  //   let shoesInfo = {};
-  //   sizeArray.forEach(size => {
-  //     console.log('szie : ', size);
-  //     console.log('products : : : ', products[0]);
-  //     products.forEach(product => {
-  //       console.log('product : ', product);
-  //       if (shoesInfo[product.code]) {
-  //         if (!shoesInfo[product.code][size] && product.size === size) {
-  //           shoesInfo[product.code][size] = product.count;
-  //         } else if (!shoesInfo[product.code][size]) {
-  //           shoesInfo[product.code][size] = 0;
-  //         }
-  //       } else {
-  //         console.log('product.size : ', product.size);
-  //         console.log('size : ', size);
-  //         console.log('count : ', product.count);
-  //
-  //         shoesInfo[product.code] = {
-  //           code: product.code,
-  //           color: product.color,
-  //           inputPrice: product.input_price,
-  //           outputPrice: product.output_price,
-  //           brand: product.brand_name
-  //         };
-  //
-  //         shoesInfo[product.code][product.size] = product.count
-  //
-  //       }
-  //     })
-  //   });
-  //
-  //   console.log('shoesInfo : ', shoesInfo);
-  //
-  //
-  //   let data = _.map(shoesInfo, shoe => {
-  //     return shoe;
-  //   });
-  //
-  //
-  //
-  //   console.log(rows);
-  //   res.send(data);
-  // });
+  connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
+    "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id", (err, rows) => {
+    if(err) {
+      console.log('err : ', err);
+      throw err;
+    }
+
+
+    // let args = _map(rows, row => row);
+
+    console.log('args : ', rows);
+    let products = rows;
+
+    console.log('products: ', products);
+    let sizeArray = [130,140,150,160,170,180,190,200,210,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
+
+    let shoesInfo = {};
+    sizeArray.forEach(size => {
+      console.log('szie : ', size);
+      console.log('products : : : ', products[0]);
+      products.forEach(product => {
+        console.log('product : ', product);
+        if (shoesInfo[product.code]) {
+          if (!shoesInfo[product.code][size] && product.size === size) {
+            shoesInfo[product.code][size] = product.count;
+          } else if (!shoesInfo[product.code][size]) {
+            shoesInfo[product.code][size] = 0;
+          }
+        } else {
+          console.log('product.size : ', product.size);
+          console.log('size : ', size);
+          console.log('count : ', product.count);
+
+          shoesInfo[product.code] = {
+            code: product.code,
+            color: product.color,
+            inputPrice: product.input_price,
+            outputPrice: product.output_price,
+            brand: product.brand_name
+          };
+
+          shoesInfo[product.code][product.size] = product.count
+
+        }
+      })
+    });
+
+    console.log('shoesInfo : ', shoesInfo);
+
+
+    let data = _.map(shoesInfo, shoe => {
+      return shoe;
+    });
+
+
+
+    console.log(rows);
+    res.send(data);
+  });
   // ----
 
 
@@ -182,7 +182,7 @@ app.get('/test', (req, res) => {
 
 
 
-  res.send([{code: 'test'}]);
+  // res.send([{code: 'test'}]);
 });
 
 /**
@@ -191,47 +191,94 @@ app.get('/test', (req, res) => {
 
 app.get('/dbs/products', (req, res) => {
     // 주석 ---
-    // connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
-    //   "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id", (err, rows) => {
-    //     if(err) throw err;
-    //
-    //     console.log(rows);
-    //     res.send(rows);
-    // });
+    connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
+      "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id", (err, rows) => {
+        if(err) throw err;
+
+        console.log(rows);
+        res.send(rows);
+    });
     // ----
 
 });
 
 app.get('/dbs/accounts', (req, res, next) => {
   // 주석 ---
-  // console.log('req.session.query 11: ', req.session.user_id);
-  //   let id = req.query.id;
-  //   let pw = req.query.pw;
-  //   console.log('req.query', req.query);
-  //
-  //   connection.query(`SELECT * FROM account_table WHERE account_id = "${id}" AND account_pw = "${pw}"`, (err, rows) => {
-  //       if(err) {
-  //         console.log('err : ', err);
-  //         throw err;
-  //       }
-  //
-  //       if (rows.length === 0) {
-  //         res.send(false);
-  //         // res.render('login');
-  //       } else {
-  //         console.log('req.session.query : ', req.session.user_id);
-  //         res.send(true);
-  //         // res.redirect('/products');
-  //       }
-  //   });
-  // ----
-
+  console.log('req.session.query 11: ', req.session.user_id);
     let id = req.query.id;
     let pw = req.query.pw;
+    console.log('req.query', req.query);
 
-  res.send(true);
+    connection.query(`SELECT * FROM account_table WHERE account_id = "${id}" AND account_pw = "${pw}"`, (err, rows) => {
+        if(err) {
+          console.log('err : ', err);
+          throw err;
+        }
 
+        if (rows.length === 0) {
+          req.session.destroy(function (err) {
+            if (err) console.log('err : ', err);
+            else {
+              console.log('destroy()');
+              res.send(false);
+            }
+          });
+
+        } else {
+          console.log('req.session.query : ', req.session.user_id);
+          res.send(true);
+        }
+    });
+  // ----
 });
+
+app.post('/dbs/products', (req, res) => {
+  let code = req.body.code;
+  let color = req.body.color;
+  let inputPrice = req.body.inputPrice;
+  let outputPrice = req.body.outputPrice;
+  let brand = req.body.brand;
+  let size = req.body.size;
+
+  console.log(`${code}, ${color}, ${inputPrice}, ${outputPrice}, ${brand}, ${size}`);
+
+  connection.query(`SELECT * FROM color_table WHERE color = '${color}'`, (err, rows) => {
+    if (err) {
+      console.log('error : ', err);
+      throw err;
+    }
+
+    if(rows.length === 0) {
+      connection.query('INSERT INTO `color_table`(`color`) VALUES ("'+color+'")', (err, rows) => {
+        if (err) {
+          console.log('insert color_table error : ', err);
+          throw err;
+        }
+      });
+    }
+
+    connection.query('INSERT INTO `brand_table`(`code`, `brand_name`) VALUES ("'+code+'", "'+brand+'")' , (err, rows) => {
+      if (err) {
+        console.log('insert color_table error : ', err);
+        res.send(err);
+      }
+      connection.query('INSERT INTO `shoes_table`(`code`, `size`, `input_price`, `output_price`, `color`) VALUES ("'+code+'","'+size+'", "'+inputPrice+'", "'+outputPrice+'", "'+color+'")', (err, rows) => {
+        if (err) {
+          console.log('insert shoes_table error : ', err);
+          res.send(err);
+        }
+
+        res.send(true);
+
+      });
+
+    });
+
+
+  });
+});
+
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
