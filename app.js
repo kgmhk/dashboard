@@ -4,7 +4,7 @@ import Debug from 'debug';
 import express from 'express';
 import logger from 'morgan';
 import path from 'path';
-import mysql from 'mysql';
+import mysql from 'promise-mysql';
 import _ from 'lodash';
 import session from 'express-session';
 import parseurl from 'parseurl';
@@ -14,7 +14,7 @@ import index from './routes/index';
 
 let dbconfig = require(__dirname+'/config/database.json');
 // 주석 ---
-let connection = mysql.createConnection(dbconfig);
+let connection = mysql.createPool(dbconfig);
 // ----
 // import favicon from 'serve-favicon';
 
@@ -109,98 +109,53 @@ app.get('/management', (req, res) => {
     }
 });
 
-app.get('/test', (req, res) => {
-
-  console.log('test: ');
-  console.log('aaa');
-
-  // 주 석 ----
-  connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
-    "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id", (err, rows) => {
-    if(err) {
-      console.log('err : ', err);
-      throw err;
-    }
-
-
-    // let args = _map(rows, row => row);
-
-    console.log('args : ', rows);
-    let products = rows;
-
-    console.log('products: ', products);
-    let sizeArray = [130,140,150,160,170,180,190,200,210,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
-
-    let shoesInfo = {};
-    sizeArray.forEach(size => {
-      console.log('szie : ', size);
-      console.log('products : : : ', products[0]);
-      products.forEach(product => {
-        console.log('product : ', product);
-        if (shoesInfo[product.code]) {
-          if (!shoesInfo[product.code][size] && product.size === size) {
-            shoesInfo[product.code][size] = product.count;
-          } else if (!shoesInfo[product.code][size]) {
-            shoesInfo[product.code][size] = 0;
-          }
-        } else {
-          console.log('product.size : ', product.size);
-          console.log('size : ', size);
-          console.log('count : ', product.count);
-
-          shoesInfo[product.code] = {
-            code: product.code,
-            color: product.color,
-            inputPrice: product.input_price,
-            outputPrice: product.output_price,
-            brand: product.brand_name
-          };
-
-          shoesInfo[product.code][product.size] = product.count
-
-        }
-      })
-    });
-
-    console.log('shoesInfo : ', shoesInfo);
-
-
-    let data = _.map(shoesInfo, shoe => {
-      return shoe;
-    });
-
-
-
-    console.log(rows);
-    res.send(data);
-  });
-  // ----
-
-
-
-
-
-
-
-  // res.send([{code: 'test'}]);
-});
-
 /**
  * db query
  */
 
-app.get('/dbs/products', (req, res) => {
-    // 주석 ---
-    connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
-      "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id", (err, rows) => {
-        if(err) throw err;
+app.get('/dbs/products', async(req, res) => {
 
-        console.log(rows);
-        res.send(rows);
-    });
-    // ----
+  console.log('GET /dbs/products', );
 
+  // 주 석 ----
+
+  const rows = await connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
+    "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id");
+  let products = rows;
+
+  console.log('products: ', products);
+  let sizeArray = [130,140,150,160,170,180,190,200,210,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
+
+  let shoesInfo = {};
+  sizeArray.forEach(size => {
+    products.forEach(product => {
+      if (shoesInfo[product.code]) {
+        if (!shoesInfo[product.code][size] && product.size === size) {
+          shoesInfo[product.code][size] = product.count;
+        } else if (!shoesInfo[product.code][size]) {
+          // shoesInfo[product.code][size] = 0;
+        }
+      } else {
+        shoesInfo[product.code] = {
+          code: product.code,
+          color: product.color,
+          inputPrice: product.input_price,
+          outputPrice: product.output_price,
+          brand: product.brand_name
+        };
+
+        shoesInfo[product.code][product.size] = product.count
+
+      }
+    })
+  });
+  let data = _.map(shoesInfo, shoe => {
+    return shoe;
+  });
+
+  res.send(data);
 });
+
 
 app.get('/dbs/accounts', (req, res, next) => {
   // 주석 ---
@@ -233,7 +188,7 @@ app.get('/dbs/accounts', (req, res, next) => {
 });
 
 async function asyncTest() {
-  return new Promise((resolve) => setTimeout(resolve, 3000)) 
+  return new Promise((resolve) => setTimeout(resolve, 3000))
 }
 
 app.post('/dbs/products', async(req, res) => {
@@ -248,44 +203,31 @@ app.post('/dbs/products', async(req, res) => {
   
   console.log(`${code}, ${color}, ${inputPrice}, ${outputPrice}, ${brand}, ${size}`);
 
-  await asyncTest();
+  // await asyncTest();
 
   console.log('next');
 
-  connection.query(`SELECT * FROM color_table WHERE color = '${color}'`, (err, rows) => {
-    if (err) {
-      console.log('error : ', err);
-      throw err;
-    }
-
-    if(rows.length === 0) {
-      connection.query('INSERT INTO `color_table`(`color`) VALUES ("'+color+'")', (err, rows) => {
-        if (err) {
-          console.log('insert color_table error : ', err);
-          throw err;
-        }
-      });
-    }
-
-    connection.query('INSERT INTO `brand_table`(`code`, `brand_name`) VALUES ("'+code+'", "'+brand+'")' , (err, rows) => {
-      if (err) {
-        console.log('insert color_table error : ', err);
-        res.send(err);
-      }
-      connection.query('INSERT INTO `shoes_table`(`code`, `size`, `input_price`, `output_price`, `color`) VALUES ("'+code+'","'+size+'", "'+inputPrice+'", "'+outputPrice+'", "'+color+'")', (err, rows) => {
-        if (err) {
-          console.log('insert shoes_table error : ', err);
-          res.send(err);
-        }
-
-        res.send(true);
-
-      });
-
-    });
-
-
+  const insertColor = await connection.query('INSERT INTO `color_table`(`color`) VALUES ("'+color+'")').catch(err => {
+    console.log(err);
+    if (err.errno !== 1062) throw err;
   });
+
+  console.log('duplicatedColor : ', insertColor);
+
+  const insertBrand = await connection.query('INSERT INTO `brand_table`(`code`, `brand_name`) VALUES ("'+code+'", "'+brand+'")').catch(err => {
+    console.log(err);
+    if (err.errno !== 1062) throw err;
+  });
+
+  console.log('insertBrand', insertBrand);
+
+  const insertShoes = await connection.query('INSERT INTO `shoes_table`(`code`, `size`, `input_price`, `output_price`, `color`) VALUES ("'+code+'","'+size+'", "'+inputPrice+'", "'+outputPrice+'", "'+color+'")').catch(err => {
+    console.log(err);
+    if (err.errno !== 1062) throw err;
+    else res.send('duplicated shoes');
+  })
+
+  console.log('complieted insert shoes');
 });
 
 
