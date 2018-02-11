@@ -232,15 +232,25 @@ app.get('/dbs/accounts', (req, res, next) => {
   // ----
 });
 
-app.post('/dbs/products', (req, res) => {
+async function asyncTest() {
+  return new Promise((resolve) => setTimeout(resolve, 3000)) 
+}
+
+app.post('/dbs/products', async(req, res) => {
   let code = req.body.code;
   let color = req.body.color;
   let inputPrice = req.body.inputPrice;
   let outputPrice = req.body.outputPrice;
   let brand = req.body.brand;
   let size = req.body.size;
-
+  
+  
+  
   console.log(`${code}, ${color}, ${inputPrice}, ${outputPrice}, ${brand}, ${size}`);
+
+  await asyncTest();
+
+  console.log('next');
 
   connection.query(`SELECT * FROM color_table WHERE color = '${color}'`, (err, rows) => {
     if (err) {
@@ -277,6 +287,7 @@ app.post('/dbs/products', (req, res) => {
 
   });
 });
+
 
 
 
