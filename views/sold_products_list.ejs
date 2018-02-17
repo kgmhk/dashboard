@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>재고 현황</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+    <link href="/stylesheets/bootstrap-table.css" rel="stylesheet">
+    <link rel="stylesheet" href="//rawgit.com/wenzhixin/bootstrap-table-fixed-columns/master/bootstrap-table-fixed-columns.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <a class="navbar-brand" href="#">DashBoard</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-5">
+            <p class="navbar-text">Signed in as <a href="#" class="navbar-link"><%= user_id %></a></p>
+            <button type="button" class="btn btn-default navbar-btn" onClick={logout()}>로그 아웃</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <nav>
+                <ul class="nav nav-sidebar">
+                    <!--<nav>-->
+                    <!--<ul class="nav">-->
+                    <li class="active"><a href="#" id="btn-1" data-toggle="collapse" data-target="#submenu1" aria-expanded="false">재고 현황</a>
+                        <ul class="nav collapse in active" id="submenu1" role="menu" aria-labelledby="btn-1" style="padding-right: 20px; padding-left: 20px;">
+                            <li><a href="/list/products/inventory">재고 현황</a></li>
+                            <li class="active"><a href="/list/products/sold">판매 현황</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#" id="btn-1" data-toggle="collapse" data-target="#submenu2" aria-expanded="false">재고 관리</a>
+                        <ul class="nav collapse" id="submenu2" role="menu" aria-labelledby="btn-1" style="padding-right: 20px; padding-left: 20px;">
+                            <li><a href="/apply/products/add">상품 추가</a></li>
+                            <li><a href="/apply/products/sold">판매 관리</a></li>
+                            <li><a href="/apply/products/etc">색상 / 브랜드 추가</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">설 정</a></li>
+                    <!--</ul>-->
+                    <!--</nav>-->
+                </ul>
+            </nav>
+        </div>
+
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h2 class="sub-header">판매 현황</h2>
+            <div class="table-responsive">
+                <table id="table" data-toggle="table" data-height="400" data-show-columns="true" data-url="http://localhost:3000/dbs/list/products/sold">
+                    <thead>
+                    <tr>
+                        <th data-field="code" data-sortable="true"> code </th>
+                        <th data-field="color" data-sortable="true"> color </th>
+                        <th data-field="inputPrice" data-sortable="true"> 입고가격 </th>
+                        <th data-field="outputPrice" data-sortable="true"> 판매가격 </th>
+                        <th data-field="brand" data-sortable="true"> 브랜드명 </th>
+                        <th data-field="client" data-sortable="true"> 거래처 </th>
+                        <th data-field="size" data-sortable="true"> 사이즈 </th>
+                        <th data-field="date" data-sortable="true"> 판매날짜 </th>
+                    </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+<!-- Bootstrap core JavaScript================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!-- <script src="../../dist/js/bootstrap.min.js"></script> -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="/javascripts/SoldProductList.js"></script>
+<script src="/javascripts/bootstrap-table.js"></script>
+<script src="/javascripts/logout.js"></script>
+<script src="//rawgit.com/wenzhixin/bootstrap-table-fixed-columns/master/bootstrap-table-fixed-columns.js"></script>
+</body>
+</html>

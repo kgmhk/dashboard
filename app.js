@@ -8,9 +8,14 @@ import mysql from 'promise-mysql';
 import _ from 'lodash';
 import session from 'express-session';
 import parseurl from 'parseurl';
+let RedisStore = require('connect-redis')(session);
 
 import index from './routes/index';
-
+import { ProductsProcessor } from './routes/processor/products.processor';
+import { AccountProcessor } from './routes/processor/account.processor';
+import { ColorProcessor } from './routes/processor/color.processor';
+import { BrandProcessor } from './routes/processor/brand.processor';
+import { ClientProcessor } from './routes/processor/client.processor';
 
 let dbconfig = require(__dirname+'/config/database.json');
 // 주석 ---
@@ -18,15 +23,24 @@ let connection = mysql.createPool(dbconfig);
 // ----
 // import favicon from 'serve-favicon';
 
-
+const productsProcessor = new ProductsProcessor();
+const accountProcessor = new AccountProcessor();
+const colorProcessor = new ColorProcessor();
+const brandProcessor = new BrandProcessor();
+const clientProcessor = new ClientProcessor();
 const app = express();
 
+app.use(cookieParser());
 // session setting
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  proxy: true
+  proxy: true,
+  store   : new RedisStore({
+    host: 'localhost',
+    port: 6379,
+  })
 }));
 
 const debug = Debug('dashboard:app');
@@ -49,13 +63,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 
 app.use(function (req, res, next) {
-  console.log('first fucntion');
   let pathname = parseurl(req).pathname.split("?");
-
-  console.log('pathname  ::', pathname);
   if (pathname[0] === '/dbs/accounts') {
-    console.log('pathname : ', pathname);
-    console.log('req.session : ', req.query.id);
     let user_id = req.query.id;
     req.session.user_id = user_id;
     console.log('input user_id  : ', req.session.user_id);
@@ -64,8 +73,8 @@ app.use(function (req, res, next) {
     console.log('else user_id  : ', req.session.user_id);
     next();
   }
-
 });
+
 
 app.get('/login', (req, res, next) => {
     console.log('get login');
@@ -79,17 +88,15 @@ app.get('/logout', (req, res, next) => {
     req.session.destroy(function (err) {
       if (err) console.log('err : ', err);
       else {
-        console.log('destroy()');
         res.send(true);
       }
     });  // 세션 삭제
   } else {
-    console.log('after destroy');
     res.send(false);
   }
 });
 
-app.get('/products', (req, res, next) => {
+app.get('/list/products/inventory', (req, res, next) => {
   // res.render('products', {account_id: 11});
     console.log('/products req.session : ', req.session.user_id);
     if (!req.session.user_id) {
@@ -100,13 +107,40 @@ app.get('/products', (req, res, next) => {
     }
 });
 
-app.get('/management', (req, res) => {
+app.get('/apply/products/add', (req, res, next) => {
     if (!req.session.user_id) {
       res.render('login');
     } else {
 
-      res.render('management');
+      res.render('add_product', {user_id: req.session.user_id});
     }
+});
+
+app.get('/apply/products/sold', (req, res, next) => {
+  if (!req.session.user_id) {
+    res.render('login');
+  } else {
+
+    res.render('sold_product', {user_id: req.session.user_id});
+  }
+});
+
+app.get('/apply/products/etc', (req, res, next) => {
+  if (!req.session.user_id) {
+    res.render('login');
+  } else {
+
+    res.render('add_color_brand', {user_id: req.session.user_id});
+  }
+});
+
+app.get('/list/products/sold', (req, res, next) => {
+  if (!req.session.user_id) {
+    res.render('login');
+  } else {
+
+    res.render('sold_products_list', {user_id: req.session.user_id});
+  }
 });
 
 /**
@@ -114,123 +148,151 @@ app.get('/management', (req, res) => {
  */
 
 app.get('/dbs/products', async(req, res) => {
-
   console.log('GET /dbs/products', );
+  const data = await productsProcessor.getProducts();
+  res.send(data);
+});
 
-  // 주 석 ----
+app.get('/dbs/list/products/sold', async(req, res) => {
+  console.log('GET /dbs/products', );
+  const data = await productsProcessor.getSoldProducts();
+  // const data = [{code: 111, color: "white", inputPrice: 10000, outputPrice: 20000, brand: "nike", size: 130, date: "2017-01-01"}];
+  res.send(data);
+});
 
-  const rows = await connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
-    "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id");
-  let products = rows;
+app.get('/dbs/list/colors', async(req, res) => {
+  console.log('GET /dbs/list/color', );
+  const data = await colorProcessor.getColor();
+  // const data = [{code: 111, color: "white"}];
+  res.send(data);
+});
 
-  console.log('products: ', products);
-  let sizeArray = [130,140,150,160,170,180,190,200,210,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
+app.get('/dbs/list/brands', async(req, res) => {
+  console.log('GET /dbs/list/brands', );
+  const data = await brandProcessor.getBrand();
+  // const data = [{code: 111, color: "white"}];
+  res.send(data);
+});
 
-  let shoesInfo = {};
-  sizeArray.forEach(size => {
-    products.forEach(product => {
-      if (shoesInfo[product.code]) {
-        if (!shoesInfo[product.code][size] && product.size === size) {
-          shoesInfo[product.code][size] = product.count;
-        } else if (!shoesInfo[product.code][size]) {
-          // shoesInfo[product.code][size] = 0;
-        }
-      } else {
-        shoesInfo[product.code] = {
-          code: product.code,
-          color: product.color,
-          inputPrice: product.input_price,
-          outputPrice: product.output_price,
-          brand: product.brand_name
-        };
-
-        shoesInfo[product.code][product.size] = product.count
-
-      }
-    })
-  });
-  let data = _.map(shoesInfo, shoe => {
-    return shoe;
-  });
-
+app.get('/dbs/list/clients', async(req, res) => {
+  console.log('GET /dbs/list/clients', );
+  const data = await clientProcessor.getClient();
+  // const data = [{code: 111, color: "white"}];
   res.send(data);
 });
 
 
-app.get('/dbs/accounts', (req, res, next) => {
-  // 주석 ---
-  console.log('req.session.query 11: ', req.session.user_id);
-    let id = req.query.id;
-    let pw = req.query.pw;
-    console.log('req.query', req.query);
+app.get('/dbs/accounts', async(req, res, next) => {
+  const id = req.query.id;
+  const pw = req.query.pw;
+  console.log('req.query', req.query);
 
-    connection.query(`SELECT * FROM account_table WHERE account_id = "${id}" AND account_pw = "${pw}"`, (err, rows) => {
-        if(err) {
-          console.log('err : ', err);
-          throw err;
-        }
+  const data = await accountProcessor.getAccount(id, pw);
 
-        if (rows.length === 0) {
-          req.session.destroy(function (err) {
-            if (err) console.log('err : ', err);
-            else {
-              console.log('destroy()');
-              res.send(false);
-            }
-          });
-
-        } else {
-          console.log('req.session.query : ', req.session.user_id);
-          res.send(true);
-        }
+  if (!data) {
+    req.session.destroy(function (err) {
+      if (err) {
+        console.log('err : ', err);
+        throw err;
+      }
+      else {
+        console.log('destroy()');
+        res.send(data);
+      }
     });
-  // ----
+  } else {
+    res.send(data);
+  }
 });
 
 async function asyncTest() {
   return new Promise((resolve) => setTimeout(resolve, 3000))
 }
 
-app.post('/dbs/products', async(req, res) => {
-  let code = req.body.code;
-  let color = req.body.color;
-  let inputPrice = req.body.inputPrice;
-  let outputPrice = req.body.outputPrice;
-  let brand = req.body.brand;
-  let size = req.body.size;
-  
-  
-  
-  console.log(`${code}, ${color}, ${inputPrice}, ${outputPrice}, ${brand}, ${size}`);
+app.post('/dbs/product', async(req, res) => {
+  const code = req.body.code;
+  const color = req.body.color;
+  const inputPrice = req.body.inputPrice;
+  const outputPrice = req.body.outputPrice;
+  const brand = req.body.brand;
+  const size = req.body.size;
+  const client = req.body.client;
 
-  // await asyncTest();
+  console.log(`${code}, ${color}, ${inputPrice}, ${outputPrice}, ${brand}, ${size}, ${client}`);
 
-  console.log('next');
-
-  const insertColor = await connection.query('INSERT INTO `color_table`(`color`) VALUES ("'+color+'")').catch(err => {
-    console.log(err);
-    if (err.errno !== 1062) throw err;
-  });
-
-  console.log('duplicatedColor : ', insertColor);
-
-  const insertBrand = await connection.query('INSERT INTO `brand_table`(`code`, `brand_name`) VALUES ("'+code+'", "'+brand+'")').catch(err => {
-    console.log(err);
-    if (err.errno !== 1062) throw err;
-  });
-
-  console.log('insertBrand', insertBrand);
-
-  const insertShoes = await connection.query('INSERT INTO `shoes_table`(`code`, `size`, `input_price`, `output_price`, `color`) VALUES ("'+code+'","'+size+'", "'+inputPrice+'", "'+outputPrice+'", "'+color+'")').catch(err => {
-    console.log(err);
-    if (err.errno !== 1062) throw err;
-    else res.send('duplicated shoes');
-  })
+  const result = await productsProcessor.createProduct(code, color, inputPrice, outputPrice, brand, size, client);
+  res.send(result);
 
   console.log('complieted insert shoes');
 });
 
+app.post('/dbs/product/barcode', async(req, res) => {
+  const barcode = req.body.barcode;
 
+  console.log(`${barcode}`);
+
+  const result = await productsProcessor.createProductByBarcode(barcode);
+  res.send(result);
+
+  console.log('complieted insert shoes');
+});
+
+app.post('/dbs/sold/barcode', async(req, res) => {
+  const barcode = req.body.barcode;
+
+  console.log(`${barcode}`);
+
+  const result = await productsProcessor.soldProductByBarCode(barcode);
+  res.send(result);
+
+  console.log('complieted insert shoes');
+});
+
+app.post('/dbs/sold', async(req, res) => {
+  const code = req.body.code;
+  const color = req.body.color;
+  const size = req.body.size;
+
+  console.log(`${code}, ${color}, ${size}`);
+
+  const result = await productsProcessor.soldProduct(code, color, size);
+  res.send(result);
+
+  console.log('complieted sold shoes');
+});
+
+app.post('/dbs/color', async(req, res) => {
+  const color = req.body.color;
+
+  console.log(`color : ${color}`);
+
+  const result = await colorProcessor.addColor(color);
+  res.send(result);
+
+  console.log('complieted add color');
+});
+
+app.post('/dbs/brand', async(req, res) => {
+  const brand = req.body.brand;
+
+  console.log(`brand : ${brand}`);
+
+  const result = await brandProcessor.addBrand(brand);
+  res.send(result);
+
+  console.log('complieted add brand');
+});
+
+app.post('/dbs/client', async(req, res) => {
+  const client = req.body.client;
+
+  console.log(`client : ${client}`);
+
+  const result = await clientProcessor.addClient(client);
+  res.send(result);
+
+  console.log('complieted add client');
+});
 
 
 // catch 404 and forward to error handler

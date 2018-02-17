@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>재고 관리</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <!-- <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+    <link href="/stylesheets/bootstrap-table.css" rel="stylesheet">
+    <link rel="stylesheet" href="//rawgit.com/wenzhixin/bootstrap-table-fixed-columns/master/bootstrap-table-fixed-columns.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <a class="navbar-brand" href="#">DashBoard</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-5">
+            <p class="navbar-text">Signed in as <a href="#" class="navbar-link"><%= user_id %></a></p>
+            <button type="button" class="btn btn-default navbar-btn" onClick={logout()}>로그 아웃</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-3 col-md-2 sidebar">
+            <!--<ul class="nav nav-sidebar">-->
+            <!--<li><a href="products">재고 현황</a></li>-->
+            <!--<li class="active"><a href="management">재고 관리<span class="sr-only">(current)</span></a></li>-->
+            <!--</ul>-->
+            <ul class="nav nav-sidebar">
+                <!--<nav>-->
+                <!--<ul class="nav">-->
+                <li><a href="#" id="btn-1" data-toggle="collapse" data-target="#submenu1" aria-expanded="false">재고 현황</a>
+                    <ul class="nav collapse" id="submenu1" role="menu" aria-labelledby="btn-1" style="padding-right: 20px; padding-left: 20px;">
+                        <li><a href="/list/products/inventory">재고 현황</a></li>
+                        <li><a href="/list/products/sold">판매 현황</a></li>
+                    </ul>
+                </li>
+                <li class="active"><a href="#" id="btn-1" data-toggle="collapse" data-target="#submenu2" aria-expanded="false">재고 관리</a>
+                    <ul class="nav collapse in active" id="submenu2" role="menu" aria-labelledby="btn-1" style="padding-right: 20px; padding-left: 20px;">
+                        <li><a href="/apply/products/add">상품 추가</a></li>
+                        <li><a href="/apply/products/sold">판매 관리</a></li>
+                        <li class="active"><a href="/apply/products/etc">색상 / 브랜드 추가</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">설 정</a></li>
+                <!--</ul>-->
+                <!--</nav>-->
+            </ul>
+        </div>
+
+
+
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="sub-header">색상 추가 <small>색상 코드 생성</small></h2>
+
+
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group-mg">
+                                <input type="text" class="form-control" placeholder="상품색상"
+                                       aria-describedby="sizing-addon1" id="product_color" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-default" onClick={addColorClicked()}>입력</button>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="table-responsive">
+                        <table id="color_table" data-toggle="table" data-height="400" data-show-columns="true" data-url="http://localhost:3000/dbs/list/colors">
+                            <thead>
+                            <tr>
+                                <th data-field="code" data-sortable="true"> code </th>
+                                <th data-field="color" data-sortable="true"> color </th>
+                                <th data-field="date" data-sortable="true"> 등록 날짜 </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-6">
+
+                    <h2 class="sub-header">브랜드 추가 <small>브랜드 코드 생성</small></h2>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group-mg">
+                                <input type="text" class="form-control" placeholder="브랜드 이름"
+                                       aria-describedby="sizing-addon1" id="product_brand" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-default" onClick={addBrandClicked()}>입력</button>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="table-responsive">
+                        <table id="brand_table" data-toggle="table" data-height="400" data-show-columns="true" data-url="http://localhost:3000/dbs/list/brands">
+                            <thead>
+                            <tr>
+                                <th data-field="code" data-sortable="true"> code </th>
+                                <th data-field="brand" data-sortable="true"> brand </th>
+                                <th data-field="date" data-sortable="true"> 등록 날짜 </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="sub-header">거래처 추가 <small>거래처 코드 생성</small></h2>
+
+
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group-mg">
+                                <input type="text" class="form-control" placeholder="거래처 명"
+                                       aria-describedby="sizing-addon1" id="product_client" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-default" onClick={addClientClicked()}>입력</button>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="table-responsive">
+                        <table id="client_table" data-toggle="table" data-height="400" data-show-columns="true" data-url="http://localhost:3000/dbs/list/clients">
+                            <thead>
+                            <tr>
+                                <th data-field="code" data-sortable="true"> code </th>
+                                <th data-field="client" data-sortable="true"> client </th>
+                                <th data-field="date" data-sortable="true"> 등록 날짜 </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-6">
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+<!-- Bootstrap core JavaScript================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!-- <script src="../../dist/js/bootstrap.min.js"></script> -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<script src="/javascripts/AddColorBrand.js"></script>
+<script src="/javascripts/bootstrap-table.js"></script>
+<script src="/javascripts/logout.js"></script>
+<script src="//rawgit.com/wenzhixin/bootstrap-table-fixed-columns/master/bootstrap-table-fixed-columns.js"></script>
+</body>
+</html>
