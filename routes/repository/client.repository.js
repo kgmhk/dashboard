@@ -7,14 +7,14 @@ export class ClientRepository {
   constructor() {}
 
   async getClient() {
-    return await connection.query('select id as code, client_name as client, date from client_table order by code');
+    return await connection.query('select id as code, client_name as client, margin, date from client_table order by code');
   }
 
   async getClientById(id) {
     return await connection.query('select id as code, client_name as client from client_table where id = '+id+' order by code');
   }
 
-  async addClient(client) {
-    return await connection.query('INSERT INTO `client_table`(`client_name`) VALUES ("' + client + '")').catch(e => e);
+  async addClient(client, margin) {
+    return await connection.query('INSERT INTO `client_table`(`client_name`, `margin`) VALUES ("' + client + '", "'+ margin +'")').catch(e => e);
   }
 }

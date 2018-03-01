@@ -29,6 +29,7 @@ export class ProductsProcessor {
   async getProducts() {
     console.log('ProductsProcessor');
     let products = await productsRepository.getProducts();
+    let clients = await clientRepository.getClient();
     let sizeArray = [130,140,150,160,170,180,190,200,210,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
 
     let shoesInfo = {};
@@ -41,13 +42,16 @@ export class ProductsProcessor {
             // shoesInfo[product.code][size] = 0;
           }
         } else {
+          let client = _.find(clients, {client: product.client});
+          console.log('client : ', client);
           shoesInfo[product.code] = {
             code: product.code,
             color: product.color,
             inputPrice: product.input_price,
             outputPrice: product.output_price,
             brand: product.brand_name,
-            client: product.client
+            client: product.client,
+            margin: client.margin
           };
 
           shoesInfo[product.code][product.size] = product.count

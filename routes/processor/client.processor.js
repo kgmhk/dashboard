@@ -20,8 +20,8 @@ export class ClientProcessor {
     return convertedResult;
   }
 
-  async addClient(client) {
-    const result = await clientRepository.addClient(client);
+  async addClient(client, margin) {
+    const result = await clientRepository.addClient(client, margin);
     if (result.errno && result.errno === 1062) {
       return {
         result: true,

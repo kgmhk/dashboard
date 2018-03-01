@@ -65,6 +65,7 @@ app.use('/', index);
 app.use(function (req, res, next) {
   let pathname = parseurl(req).pathname.split("?");
   if (pathname[0] === '/dbs/accounts') {
+    if (!req.query.id) next();
     let user_id = req.query.id;
     req.session.user_id = user_id;
     console.log('input user_id  : ', req.session.user_id);
@@ -134,6 +135,15 @@ app.get('/apply/products/etc', (req, res, next) => {
   }
 });
 
+app.get('/apply/products/barcode', (req, res, next) => {
+  if (!req.session.user_id) {
+    res.render('login');
+  } else {
+
+    res.render('add_barcode', {user_id: req.session.user_id});
+  }
+});
+
 app.get('/list/products/sold', (req, res, next) => {
   if (!req.session.user_id) {
     res.render('login');
@@ -178,6 +188,15 @@ app.get('/dbs/list/clients', async(req, res) => {
   console.log('GET /dbs/list/clients', );
   const data = await clientProcessor.getClient();
   // const data = [{code: 111, color: "white"}];
+  res.send(data);
+});
+
+app.get('/dbs/info/barcode', async(req, res) => {
+  console.log('GET /dbs/info/barcode', );
+  const clients = await clientProcessor.getClient();
+  const brands = await brandProcessor.getBrand();
+  const colors = await colorProcessor.getColor();
+  const data = {clients: clients, brands: brands, colors: colors};
   res.send(data);
 });
 
@@ -285,10 +304,11 @@ app.post('/dbs/brand', async(req, res) => {
 
 app.post('/dbs/client', async(req, res) => {
   const client = req.body.client;
+  const margin = req.body.margin;
 
-  console.log(`client : ${client}`);
+  console.log(`client : ${client}, margin: ${margin}`);
 
-  const result = await clientProcessor.addClient(client);
+  const result = await clientProcessor.addClient(client, margin);
   res.send(result);
 
   console.log('complieted add client');

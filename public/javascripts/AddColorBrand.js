@@ -9,6 +9,10 @@ $(document).ready(function() {
   $('#brand_table').bootstrapTable({
     search: true
   });
+
+  $('#client_table').bootstrapTable({
+    search: true
+  });
 });
 
 document.addEventListener("DOMContentLoaded",function(){
@@ -40,6 +44,7 @@ function addColorClicked() {
       if (res.result === true) {
         initProductsInfo();
         window.alert(res.msg);
+        $('#color_table').bootstrapTable('refresh');
       } else if (res.result === false) {
         window.alert(res.msg);
       }
@@ -76,6 +81,7 @@ function addBrandClicked() {
       if (res.result === true) {
         initProductsInfo();
         window.alert(res.msg);
+        $('#brand_table').bootstrapTable('refresh');
       } else if (res.result === false) {
         window.alert(res.msg);
       }
@@ -91,16 +97,23 @@ function addClientClicked() {
   console.log('직접 입력 실행');
 
   let client = document.getElementById("product_client").value;
+  let margin = document.getElementById('product_margin').value;
 
-  console.log(`client: ${client}`);
+  console.log(`client: ${client} , margin: ${margin}`);
 
   if (!client) {
     window.alert("거래처명을 입력해주세요.");
     return;
   }
 
+  if (!margin) {
+    window.alert("마진율을 입력해주세요.");
+    return;
+  }
+
   const data = {
-    client: client
+    client: client,
+    margin: margin
   };
 
   let xhr = new XMLHttpRequest();
@@ -112,6 +125,7 @@ function addClientClicked() {
       if (res.result === true) {
         initProductsInfo();
         window.alert(res.msg);
+        $('#client_table').bootstrapTable('refresh');
       } else if (res.result === false) {
         window.alert(res.msg);
       }
@@ -126,4 +140,6 @@ function addClientClicked() {
 function initProductsInfo() {
   document.getElementById("product_brand").value = '';
   document.getElementById("product_color").value = '';
+  document.getElementById("product_client").value = '';
+  document.getElementById("product_margin").value = '';
 }
