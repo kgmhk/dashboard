@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function(){
   createSelect();
 });
 
+const LOG = 'ADD_BARCODE';
+
 async function createSelect() {
   let data = await getInfoForBarcode();
   // var xhr = new XMLHttpRequest();
@@ -146,9 +148,33 @@ function createColorSelect(colors) {
 }
 
 function createBarcodeClicked() {
-  
+  console.log(LOG, 'createBarcode Clicked');
+
+  // const elem = document.getElementById;
+  // console.log(LOG, 'elemclient ', $("#product_client"));
+  const clientCode = document.getElementById("product_client").value;
+  const brandCode = document.getElementById("product_brand").value;
+  const designCode = document.getElementById("product_design").value;
+  const colorCode = document.getElementById("product_color").value;
+  const sizeCode = document.getElementById("product_size").value;
+
+  console.log(LOG, `${clientCode}, ${brandCode}, ${designCode}, ${colorCode}, ${sizeCode}`);
+
+  const barcode = `${pad(clientCode, 2)}&${pad(brandCode, 2)}&${pad(designCode, 2)}&${pad(designCode, 3)}&${pad(colorCode, 2)}&${sizeCode}`;
+
+  document.getElementById("product_barcode").value = barcode;
+
 }
 
+function pad(n, width) {
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+}
+
+
+function initCreatedBarcode() {
+  document.getElementById("product_barcode").value = "";
+}
 
 
 

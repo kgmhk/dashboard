@@ -103,7 +103,7 @@
                         <h3> 디자인 </h3>
                         <div class="input-group-mg">
                             <input type="text" class="form-control" placeholder="디자인 번호"
-                                   aria-describedby="sizing-addon1" id="product_design" required>
+                                   aria-describedby="sizing-addon1" id="product_design" maxlength=3 required>
                         </div>
                     </div>
 
@@ -136,9 +136,9 @@
             <h2 class="sub-header">바코드 생성 <small>바코드 입력 01[거래처]01[브랜드]001[디자인]01[색상]&사이즈&입고가격&판매가격</small></h2>
 
             <div class="input-group">
-                <input type="text" id="product_barcode" class="form-control" placeholder="바코드를 인식해주세요.">
+                <input type="text" id="product_barcode" class="form-control" placeholder="바코드 내용이 표시됩니다." readonly>
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" onClick={inputClickedByBarcode()}>입력</button>
+                    <button class="btn btn-default" type="button" onClick={initCreatedBarcode()}>확 인</button>
               </span>
             </div><!-- /input-group -->
         </div>
