@@ -145,6 +145,10 @@ function createColorSelect(colors) {
   $('#product_color').selectpicker('refresh');
 }
 
+function createBarcodeClicked() {
+  
+}
+
 
 
 
