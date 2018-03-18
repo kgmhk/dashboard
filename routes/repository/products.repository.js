@@ -40,8 +40,8 @@ export class ProductsRepository {
     });
   }
 
-  async insertShoes(code, brand, size, inputPrice, outputPrice, color, client) {
-    return await connection.query('INSERT INTO `shoes_table`(`code`, `brand`, `size`, `input_price`, `output_price`, `color`, `client`) VALUES ("'+code+'", "'+brand+'" ,"'+size+'", "'+inputPrice+'", "'+outputPrice+'", "'+color+'", "'+client+'")')
+  async insertShoes(code, brand, design, size, inputPrice, outputPrice, color, client) {
+    return await connection.query('INSERT INTO `shoes_table`(`code`, `brand`, `design`, `size`, `input_price`, `output_price`, `color`, `client`) VALUES ("'+code+'", "'+brand+'" ,"'+design+'" ,"'+size+'", "'+inputPrice+'", "'+outputPrice+'", "'+color+'", "'+client+'")')
       .catch(err => err);
   }
 

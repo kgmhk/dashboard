@@ -157,11 +157,17 @@ function createBarcodeClicked() {
   const designCode = document.getElementById("product_design").value;
   const colorCode = document.getElementById("product_color").value;
   const sizeCode = document.getElementById("product_size").value;
+  const inputCode = document.getElementById("product_input").value;
+  const outputCode = document.getElementById("product_output").value;
 
   console.log(LOG, `${clientCode}, ${brandCode}, ${designCode}, ${colorCode}, ${sizeCode}`);
 
-  const barcode = `${pad(clientCode, 2)}&${pad(brandCode, 2)}&${pad(designCode, 2)}&${pad(designCode, 3)}&${pad(colorCode, 2)}&${sizeCode}`;
+  const barcode = `${pad(clientCode, 2)}${pad(brandCode, 2)}${pad(designCode, 3)}${pad(colorCode, 2)}&${sizeCode}&${inputCode}&${outputCode}`;
 
+  if (!clientCode || !brandCode || !designCode || !colorCode || !sizeCode || !inputCode || !outputCode) {
+    window.alert('모든 항목을 입력해주세요.');
+    return;
+  }
 
 
   const passphrase = "barcode";

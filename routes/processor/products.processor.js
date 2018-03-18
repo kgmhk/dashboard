@@ -28,7 +28,7 @@ export class ProductsProcessor {
 
   async deleteProductById(id) {
     console.log('delete product id : ', id);
-    return await productsRepository.deleteProductById(id);
+    return await productsRepository.delete
   }
 
   async getAllProducts() {
@@ -126,9 +126,10 @@ export class ProductsProcessor {
 
     const clientCode = Number(code.substr(0, 2));
     const brandCode = Number(code.substr(2, 2));
+    const designCode = Number(code.substr(4, 3));
     const colorCode = Number(code.substr(7, 2));
 
-    console.log(`clientCode: ${clientCode}, brandCode: ${brandCode}, colorCode: ${colorCode}`);
+    console.log(`clientCode: ${clientCode}, brandCode: ${brandCode}, designCode: ${designCode}, colorCode: ${colorCode}`);
 
     const clientResult = await clientRepository.getClientById(clientCode);
     console.log('clientResult : ', clientResult);
@@ -171,7 +172,7 @@ export class ProductsProcessor {
 
     // await productsRepository.insertColor(color);
     // await productsRepository.insertBrand(brand);
-    const result = await productsRepository.insertShoes(code, brand, size, inputPrice, outputPrice, color, client);
+    const result = await productsRepository.insertShoes(code, brand, designCode, size, inputPrice, outputPrice, color, client);
 
 
     if (result.errno && result.errno === 1062) {
