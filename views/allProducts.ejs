@@ -52,8 +52,8 @@
                         <!--<ul class="nav">-->
                             <li class="active"><a href="#" id="btn-1" data-toggle="collapse" data-target="#submenu1" aria-expanded="false">재고 현황</a>
                                 <ul class="nav collapse in active" id="submenu1" role="menu" aria-labelledby="btn-1" style="padding-right: 20px; padding-left: 20px;">
-                                    <li class="active"><a href="/list/products/inventory">재고 현황 (사이즈 별)</a></li>
-                                    <li><a href="/list/products/allinventory">재고 현황</a></li>
+                                    <li><a href="/list/products/inventory">재고 현황 (사이즈 별)</a></li>
+                                    <li class="active"><a href="/list/products/allinventory">재고 현황</a></li>
                                     <li><a href="/list/products/sold">판매 현황</a></li>
                                 </ul>
                             </li>
@@ -76,55 +76,26 @@
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <h2 class="sub-header">재고 현황</h2>
                 <div class="table-responsive">
-                    <!--<div id="toolbar">-->
-                        <!--<button id="remove_button" class="btn btn-default">remove</button>-->
-                    <!--</div>-->
+                    <div id="toolbar">
+                        <button id="remove_button" class="btn btn-default">remove</button>
+                    </div>
                     <table id="table" data-toggle="table"
                            data-toolbar="#toolbar"
                            data-show-refresh="true"
                            data-height="500"
                            data-show-columns="true"
-                           data-url="/dbs/products">
+                           data-url="/dbs/allproducts">
                         <thead>
                             <tr>
-                                <!--<th data-field="state" data-checkbox="true"></th>-->
-                                <!--<th data-field="id"data-sortable="true"> id </th>-->
+                                <th data-field="state" data-checkbox="true"></th>
+                                <th data-field="id"data-sortable="true"> id </th>
                                 <th data-field="code" data-sortable="true"> code </th>
                                 <th data-field="color" data-sortable="true"> color </th>
-                                <th data-field="inputPrice" data-sortable="true"> 입고가격 </th>
-                                <th data-field="outputPrice" data-sortable="true"> 판매가격 </th>
+                                <th data-field="input_price" data-sortable="true"> 입고가격 </th>
+                                <th data-field="output_price" data-sortable="true"> 판매가격 </th>
                                 <th data-field="brand" data-sortable="true"> 브랜드명 </th>
                                 <th data-field="client" data-sortable="true"> 거래처 </th>
-                                <th data-field="margin" data-sortable="true"> 마진율 (%) </th>
-                                <th data-field="130" data-sortable="true"> 130 </th>
-                                <th data-field="140" data-sortable="true"> 140 </th>
-                                <th data-field="150" data-sortable="true"> 150 </th>
-                                <th data-field="160" data-sortable="true"> 160 </th>
-                                <th data-field="170" data-sortable="true"> 170 </th>
-                                <th data-field="180" data-sortable="true"> 180 </th>
-                                <th data-field="190" data-sortable="true"> 190 </th>
-                                <th data-field="200" data-sortable="true"> 200 </th>
-                                <th data-field="210" data-sortable="true"> 210 </th>
-                                <th data-field="220" data-sortable="true"> 220 </th>
-                                <th data-field="225" data-sortable="true"> 225 </th>
-                                <th data-field="230" data-sortable="true"> 230 </th>
-                                <th data-field="235" data-sortable="true"> 235 </th>
-                                <th data-field="240" data-sortable="true"> 240 </th>
-                                <th data-field="245" data-sortable="true"> 245 </th>
-                                <th data-field="250" data-sortable="true"> 250 </th>
-                                <th data-field="255" data-sortable="true"> 255 </th>
-                                <th data-field="260" data-sortable="true"> 260 </th>
-                                <th data-field="265" data-sortable="true"> 265 </th>
-                                <th data-field="270" data-sortable="true"> 270 </th>
-                                <th data-field="275" data-sortable="true"> 275 </th>
-                                <th data-field="280" data-sortable="true"> 280 </th>
-                                <th data-field="285" data-sortable="true"> 285 </th>
-                                <th data-field="290" data-sortable="true"> 290 </th>
-                                <th data-field="295" data-sortable="true"> 295 </th>
-                                <th data-field="300" data-sortable="true"> 300 </th>
-
-
-
+                                <th data-field="size" data-sortable="true"> size </th>
                             </tr>
                         </thead>
                     </table>
@@ -144,7 +115,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- <script src="../../dist/js/bootstrap.min.js"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script src="/javascripts/Products.js"></script>
+    <script src="/javascripts/AllProducts.js"></script>
     <script src="/javascripts/bootstrap-table.js"></script>
     <script src="/javascripts/Logout.js"></script>
     <script src="//rawgit.com/wenzhixin/bootstrap-table-fixed-columns/master/bootstrap-table-fixed-columns.js"></script>

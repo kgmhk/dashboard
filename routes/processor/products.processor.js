@@ -26,6 +26,18 @@ export class ProductsProcessor {
     }
   }
 
+  async deleteProductById(id) {
+    console.log('delete product id : ', id);
+    return await productsRepository.deleteProductById(id);
+  }
+
+  async getAllProducts() {
+    console.log('get All Products');
+    let allProducts = await productsRepository.getAllProducts();
+
+    return allProducts;
+  }
+
   async getProducts() {
     console.log('ProductsProcessor');
     let products = await productsRepository.getProducts();
@@ -45,6 +57,7 @@ export class ProductsProcessor {
           let client = _.find(clients, {client: product.client});
           console.log('client : ', client);
           shoesInfo[product.code] = {
+            id: product.shoe_id,
             code: product.code,
             color: product.color,
             inputPrice: product.input_price,

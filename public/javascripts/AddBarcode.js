@@ -162,8 +162,18 @@ function createBarcodeClicked() {
 
   const barcode = `${pad(clientCode, 2)}&${pad(brandCode, 2)}&${pad(designCode, 2)}&${pad(designCode, 3)}&${pad(colorCode, 2)}&${sizeCode}`;
 
-  document.getElementById("product_barcode").value = barcode;
 
+
+  const passphrase = "barcode";
+
+  var encrypted = CryptoJS.AES.encrypt(barcode, passphrase).toString();
+  var decrypted = CryptoJS.AES.decrypt(encrypted, passphrase).toString(CryptoJS.enc.Utf8);
+
+  console.log('encrypted : ', encrypted);
+  console.log('decrypted : ', decrypted);
+
+
+  document.getElementById("product_barcode").value = barcode;
 }
 
 function pad(n, width) {
@@ -264,9 +274,3 @@ function initProductsInfo() {
   document.getElementById("product_color").value = '';
   document.getElementById("product_size").value = '';
 }
-
-//SELECT * FROM shoes_table as shoes LEFT JOIN sold_table ON shoes.id = sold_table.shoes_id where sold_table.id IS NULL and shoes.size = 130 and shoes.color = "white" limit 0, 1
-
-
-
-//SELECT *, count(size) as count FROM (SELECT * FROM shoes_table LEFT JOIN sold_table ON shoes_table.id = sold_table.shoes_id where sold_table.id IS NULL) as sold_shoes join brand_table as brand WHERE sold_shoes.code = brand.code Group by sold_shoes.size, sold_shoes.code order by brand.id

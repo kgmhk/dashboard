@@ -108,6 +108,17 @@ app.get('/list/products/inventory', (req, res, next) => {
     }
 });
 
+app.get('/list/products/allinventory', (req, res, next) => {
+  // res.render('products', {account_id: 11});
+  console.log('/products req.session : ', req.session.user_id);
+  if (!req.session.user_id) {
+    res.render('login');
+  } else {
+
+    res.render('allProducts', {user_id: req.session.user_id});
+  }
+});
+
 app.get('/apply/products/add', (req, res, next) => {
     if (!req.session.user_id) {
       res.render('login');
@@ -160,6 +171,12 @@ app.get('/list/products/sold', (req, res, next) => {
 app.get('/dbs/products', async(req, res) => {
   console.log('GET /dbs/products', );
   const data = await productsProcessor.getProducts();
+  res.send(data);
+});
+
+app.get('/dbs/allproducts', async(req, res) => {
+  console.log('GET /dbs/allproducts', );
+  const data = await productsProcessor.getAllProducts();
   res.send(data);
 });
 
@@ -254,6 +271,17 @@ app.post('/dbs/product/barcode', async(req, res) => {
   res.send(result);
 
   console.log('complieted insert shoes');
+});
+
+app.post('/dbs/products/delete', async(req, res) => {
+  const id = req.body.id;
+
+  console.log(`${id}`);
+
+  const result = await productsProcessor.deleteProductById(id);
+  res.send(result);
+
+  console.log('complieted delete shoes id = ',id);
 });
 
 app.post('/dbs/sold/barcode', async(req, res) => {

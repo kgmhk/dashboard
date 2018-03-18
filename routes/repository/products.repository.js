@@ -9,11 +9,20 @@ export class ProductsRepository {
 
   }
 
+  async deleteProductById(id) {
+    return await connection.query('delete from shoes_table where id = "' +id + '"')
+  }
+
   async getProducts() {
     // const rows = await connection.query("SELECT *, count(size) as count FROM shoes_table as shoes join brand_table as brand " +
     //   "WHERE shoes.code = brand.code Group by shoes.size, shoes.code order by brand.id");
     // const rows = await connection.query("SELECT *, count(size) as count FROM (SELECT shoes_table.* FROM shoes_table LEFT JOIN sold_table ON shoes_table.id = sold_table.shoes_id where sold_table.id IS NULL) as sold_shoes join brand_table as brand WHERE sold_shoes.code = brand.code Group by sold_shoes.size, sold_shoes.code order by brand.id");
-    const rows = await connection.query("SELECT *, count(size) as count FROM (SELECT shoes_table.* FROM shoes_table LEFT JOIN sold_table ON shoes_table.id = sold_table.shoes_id where sold_table.id IS NULL) as sold_shoes join brand_table as brand WHERE sold_shoes.brand = brand.id Group by sold_shoes.size, sold_shoes.code order by brand.id");
+    const rows = await connection.query("SELECT *, count(size) as count, sold_shoes.id as shoe_id FROM (SELECT shoes_table.* FROM shoes_table LEFT JOIN sold_table ON shoes_table.id = sold_table.shoes_id where sold_table.id IS NULL) as sold_shoes join brand_table as brand WHERE sold_shoes.brand = brand.id Group by sold_shoes.size, sold_shoes.code order by brand.id");
+    return rows;
+  }
+
+  async getAllProducts() {
+    const rows = await connection.query("SELECT shoes.* FROM shoes_table as shoes LEFT JOIN sold_table ON shoes.id = sold_table.shoes_id where sold_table.id IS NULL");
     return rows;
   }
 
