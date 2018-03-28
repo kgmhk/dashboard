@@ -10,7 +10,7 @@ function onClicked() {
         return;
     }
 
-    console.log(`id: ${id}, pw: ${pw}`);
+    console.log('id:', id, 'pw: ', pw);
 
 
     var xhr = new XMLHttpRequest();
@@ -20,7 +20,7 @@ function onClicked() {
 
       }
     }
-    xhr.open('GET', `/dbs/accounts?id=${id}&pw=${pw}`, true);
+    xhr.open('GET', '/dbs/accounts?id='+id+'&pw='+pw, true);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
