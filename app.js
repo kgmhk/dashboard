@@ -279,9 +279,10 @@ app.post('/dbs/products/delete', async(req, res) => {
   console.log(`${id}`);
 
   const result = await productsProcessor.deleteProductById(id);
+  console.log('/dbs/products/delete result : ', result);
   res.send(result);
 
-  console.log('complieted delete shoes id = ',id);
+  console.log('complieted delete shoes id = ', id);
 });
 
 app.post('/dbs/sold/barcode', async(req, res) => {

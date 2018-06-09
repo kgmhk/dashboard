@@ -28,7 +28,15 @@ export class ProductsProcessor {
 
   async deleteProductById(id) {
     console.log('delete product id : ', id);
-    return await productsRepository.delete
+    const result = await productsRepository.deleteProductById(id);
+    if (result.affectedRows > 0) {
+      return {
+        result: true,
+        msg: '제품이 정상적으로 삭제되었습니다.'
+      };
+    } else {
+      return this.errorMsg(true, '오류가 발생하였습니다. 다시한번 시도해 주세요. [deleteProductById]');
+    }
   }
 
   async getAllProducts() {

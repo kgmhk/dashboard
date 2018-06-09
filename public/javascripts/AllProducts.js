@@ -41,12 +41,16 @@ function removeInventory(id) {
   };
 
   let xhr = new XMLHttpRequest();
+  let res;
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
-      const res = JSON.parse(xhr.response);
-      console.log(`result: ${JSON.stringify(res)}`); //Outputs a DOMString by default
+      console.log('xhr.response : ', xhr.response);
+      if (xhr.response) {
+          res = JSON.parse(xhr.response);
+          console.log(`result: ${JSON.stringify(res)}`); //Outputs a DOMString by default
+      }
       if (res.result === true) {
-        initProductsInfo();
+        // initProductsInfo();
         window.alert(res.msg);
       } else if (res.result === false) {
         window.alert(res.msg);
